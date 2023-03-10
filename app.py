@@ -13,13 +13,16 @@ from sklearn.utils import resample
 from keras.utils.np_utils import to_categorical
 import firebase_admin
 from firebase_admin import credentials, firestore
-import encryption
+import rsa
 import json
+from aes import AESCipher
 
 
 cred = credentials.Certificate("key.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
+
+aes_cipher = AESCipher('HealthCare')
 
 model = tf.keras.models.load_model('./assets/Xception_2.h5')
 # df = pd.read_csv(os.path.join('..', 'input', 'aug_HAM10000_metadata.csv'))
@@ -95,7 +98,7 @@ def infer_image():
 
 @app.route('/publickey', methods=['GET'])
 def index():
-    return encryption.get_key('assets/rsa_public_key.pem', str_format=True)
+    return rsa.get_key('assets/rsa_public_key.pem', str_format=True)
 
 @app.route('/add', methods=['POST'])
 def create():
@@ -112,7 +115,9 @@ def create():
         path = request.headers.get('path')
         body = request.get_data()
         print(body)
-        body = json.loads(encryption.decrypt_data(body))
+        body = json.loads(rsa.decrypt_data(body))
+        print(body)
+        body = aes_cipher.encrypt_json(body)
         print(body)
         db.document(path).set(body)# request.json
         return jsonify({"success": True}), 200
@@ -133,8 +138,12 @@ def read():
         print(client_key)
         if path:
             body = db.document(path).get()
-            body = json.dumps(body.to_dict())
-            body = encryption.encrypt_data_wth_client_key(body, client_key)
+            # print(type(body.to_dict()))
+            body = aes_cipher.decrypt_json(body.to_dict())
+            print(body)
+            body = json.dumps(body)
+            print("here")
+            body = rsa.encrypt_data_wth_client_key(body, client_key.decode())
             return body, 200
             # return jsonify(body.to_dict()), 200
         # else:

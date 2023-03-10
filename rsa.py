@@ -20,8 +20,11 @@ def encrypt_data(msg):
 
 def encrypt_data_wth_client_key(msg, key):
     client_key = RSA.importKey(key)
+    print(1)
     cipher = PKCS1_cipher.new(client_key)
+    print(2)
     encrypt_text = base64.b64encode(cipher.encrypt(bytes(msg.encode("utf8"))))
+    print(3)
     return encrypt_text.decode('utf-8')
 
 def decrypt_data(encrypt_msg):
