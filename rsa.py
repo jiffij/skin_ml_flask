@@ -20,11 +20,11 @@ def encrypt_data(msg):
 
 def encrypt_data_wth_client_key(msg, key):
     client_key = RSA.importKey(key)
-    print(1)
+    # print(1)
     cipher = PKCS1_cipher.new(client_key)
-    print(2)
+    # print(2)
     encrypt_text = base64.b64encode(cipher.encrypt(bytes(msg.encode("utf8"))))
-    print(3)
+    # print(3)
     return encrypt_text.decode('utf-8')
 
 def decrypt_data(encrypt_msg):
@@ -32,6 +32,12 @@ def decrypt_data(encrypt_msg):
     cipher = PKCS1_cipher.new(private_key)
     back_text = cipher.decrypt(base64.b64decode(encrypt_msg), 0)
     return back_text.decode('utf-8')
+
+def decrypt_data_Byte(encrypt_msg):
+    private_key = get_key('assets/rsa_private_key.pem')
+    cipher = PKCS1_cipher.new(private_key)
+    back_text = cipher.decrypt(encrypt_msg, 0)
+    return back_text
 
 def test_encrypt_decrypt():
     msg = "coolpython.net"
