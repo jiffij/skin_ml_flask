@@ -81,7 +81,7 @@ def create():
         # print(body)
         body = aes_cipher.encrypt_json(body)
         # print(body)
-        db.document(path).set(body)# request.json
+        db.document(path).update(body)# request.json
         return jsonify({"success": True}), 200
     except Exception as e:
         return f"An Error Occurred: {e}"

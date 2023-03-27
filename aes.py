@@ -32,9 +32,18 @@ class AESCipher(object):
     
     def encrypt_json(self, enc):
         for i in enc:
-            enc[i] = self.encrypt(enc[i])
+            if isinstance(enc[i], dict):
+                enc[i] = self.encrypt_json(enc[i])
+            else:
+                enc[i] = self.encrypt(enc[i])
         return enc
 
     def decrypt_json(self, enc):
-        my_dictionary = {k: self.decrypt(v) for k, v in enc.items()}
+        # my_dictionary = {k: self.decrypt(v) for k, v in enc.items()}
+        my_dictionary = {}
+        for i in enc:
+            if isinstance(enc[i], dict):
+                my_dictionary[i] = self.decrypt_json(enc[i])
+            else:
+                my_dictionary[i] = self.decrypt(enc[i])
         return my_dictionary
