@@ -1,2 +1,4 @@
 __pycache__
 *.h5
+*.zip
+myenv

@@ -87,6 +87,29 @@ def create():
         return f"An Error Occurred: {e}"
 
 
+@app.route('/set', methods=['POST'])
+def set_doc():
+    """
+        create() : Add document to Firestore collection with request body.
+        Ensure you pass a custom ID as part of json body in post request,
+        e.g. json={'id': '1', 'title': 'Write a blog post'}
+    """
+    # print('running create')
+    try:
+        path = request.headers.get('path')
+        body = request.get_data()
+        # print(body)
+        body = json.loads(rsa.decrypt_data(body))
+        # print(body)
+        body = aes_cipher.encrypt_json(body)
+        # print(body)
+        db.document(path).set(body)# request.json
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        return f"An Error Occurred: {e}"
+
+
+
 @app.route('/list', methods=['POST'])
 def read():
     """
@@ -145,4 +168,4 @@ def read():
 #     return
 
 if __name__ == '__main__':
-    app.run(debug=False, port=5000, host='0.0.0.0', threaded = True)
+    app.run(debug=True, port=5000, host='0.0.0.0', threaded = True)

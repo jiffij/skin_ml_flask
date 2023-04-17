@@ -31,11 +31,13 @@ class AESCipher(object):
         return s[:-ord(s[len(s)-1:])]
     
     def encrypt_json(self, enc):
+        # print("before", enc)
         for i in enc:
             if isinstance(enc[i], dict):
                 enc[i] = self.encrypt_json(enc[i])
             else:
                 enc[i] = self.encrypt(enc[i])
+        # print("after enc: ", enc)
         return enc
 
     def decrypt_json(self, enc):
@@ -46,4 +48,5 @@ class AESCipher(object):
                 my_dictionary[i] = self.decrypt_json(enc[i])
             else:
                 my_dictionary[i] = self.decrypt(enc[i])
+        # print(my_dictionary)
         return my_dictionary
