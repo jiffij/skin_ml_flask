@@ -68,7 +68,9 @@ def encrypt_data_wth_client_key(msg, key):
 def decrypt_data(encrypt_msg):
     substrings = list(filter(lambda s: s != '', encrypt_msg.split(' ')))
     mergedtext = ''
+    # print(substrings)
     for i in substrings:
-        mergedtext += decrypt_data_chunk(i)
+        mergedtext += decrypt_data_chunk(i) #decrypt_data_Byte(base64.b64decode(i)).decode('utf-8')
+    # print('done')
     return mergedtext
 

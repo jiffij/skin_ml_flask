@@ -99,13 +99,15 @@ def create():
         path = request.headers.get('path')
         body = request.get_data()
         # print(body)
-        body = json.loads(rsa.decrypt_data(body))
+        # body = json.loads(rsa.decrypt_data(body))
+        body = json.loads(rsa.decrypt_data((body).decode('utf-8')))
         # print(body)
         body = aes_cipher.encrypt_json(body)
         # print(body)
         db.document(path).update(body)# request.json
         return jsonify({"success": True}), 200
     except Exception as e:
+        print(e)
         return f"An Error Occurred: {e}"
 
 
@@ -117,17 +119,19 @@ def set_doc():
         e.g. json={'id': '1', 'title': 'Write a blog post'}
     """
     # print('running create')
+    print("set")
     try:
         path = request.headers.get('path')
         body = request.get_data()
         # print(body)
-        body = json.loads(rsa.decrypt_data(body))
+        body = json.loads(rsa.decrypt_data((body).decode('utf-8')))
         # print(body)
         body = aes_cipher.encrypt_json(body)
         # print(body)
         db.document(path).set(body)# request.json
         return jsonify({"success": True}), 200
     except Exception as e:
+        print(e)
         return f"An Error Occurred: {e}"
 
 
