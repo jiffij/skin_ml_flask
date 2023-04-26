@@ -173,13 +173,16 @@ def tokengen():
     roomName = request.headers.get('roomName')
     client_key = request.get_data()
     
-    now = datetime.datetime.utcnow()
-    timestamp = int(time.mktime(now.timetuple()))
-    numeric_date = timestamp + (now.microsecond / 1000000)
-    future_time = now + datetime.timedelta(minutes=30)
-    future_timestamp = int(time.mktime(future_time.timetuple()))
-    numeric_date_future = future_timestamp + (future_time.microsecond / 1000000)
-    token = generateVideoCallToken(name, roomName, numeric_date, numeric_date_future)
+    # now = datetime.datetime.utcnow()
+    # timestamp = int(time.mktime(now.timetuple()))
+    # numeric_date = timestamp + (now.microsecond / 1000000)
+    # future_time = now + datetime.timedelta(minutes=30)
+    # future_timestamp = int(time.mktime(future_time.timetuple()))
+    # numeric_date_future = future_timestamp + (future_time.microsecond / 1000000)
+    n = int(time.time())
+    f = n +30*60
+    token = generateVideoCallToken(name, roomName, f, n)
+    
     # client_key = body['client_key']
     print(token)
     token = rsa.encrypt_data_wth_client_key(token, client_key)
