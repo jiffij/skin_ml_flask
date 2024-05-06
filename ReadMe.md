@@ -1,3 +1,5 @@
+This is the proxy flask server build for Dr. UST. 
+
 It's tested with Python version 3.10.0. For dependency, do: 
 pip install -r requirements-310.txt
 
